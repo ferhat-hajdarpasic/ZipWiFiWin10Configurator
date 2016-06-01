@@ -1,0 +1,120 @@
+﻿<Page
+    x:Class="ZipWiFiWin10Configurator.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZipWiFiWin10Configurator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Loaded="Page_Loaded">
+
+    <Grid>
+        <Pivot Title="Samples">
+            <PivotItem Header="CONNECTION">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition  Height="40" />
+                    </Grid.RowDefinitions>
+                    <!-- If not specified, then Grid.Column="0" Grid.Row="0" are defaults-->
+                    <ListView Grid.Column="0" Grid.Row="0" x:Name="WiFiNetworksListView" 
+                                      HorizontalContentAlignment="Stretch" Height="Auto" VerticalContentAlignment="Stretch" 
+                                      VerticalAlignment="Stretch"  FontSize="24" DoubleTapped="ConnectToZipUnit">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Ssid}" FontWeight="Bold"/>
+                                    <TextBlock Text="  " ><Run> </Run></TextBlock>
+                                    <TextBlock Text="{Binding ConnectionStatus}" Foreground="{Binding Color}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Button Grid.Column="0" Grid.Row="1" IsEnabled="True" VerticalAlignment="Top"
+                                    x:Name="ScanWiFiButton" Click="ScanWiFiButtonClick" Height="40" Content="SCAN"/>
+                </Grid>
+            </PivotItem>
+
+            <PivotItem Header="WIFI CONFIG">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="249"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="WiFi Domains" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"/>
+
+                    <ListView Grid.Row="0" Grid.Column="1" x:Name="WiFiList" 
+                                          HorizontalContentAlignment="Stretch" FontSize="24" 
+                                          VerticalContentAlignment="Stretch" 
+                                            VerticalAlignment="Stretch"
+                                          SelectionChanged="DomainNameSelected" />
+                    <TextBlock Text="Hidden Domain" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="HiddenDomain" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="24" GotFocus="HiddenDomain_GotFocus" TextChanged="HiddenDomain_TextChanged" Margin="0,1"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left">
+                        <Run Text="Password"/>
+                    </TextBlock>
+                    <TextBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Stretch" x:Name="WiFiPassword" LostFocus="PasswordChanged" FontSize="24" Visibility="Collapsed" TextChanged="WiFiPassword_TextChanged" Margin="0,1"/>
+                    <PasswordBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Stretch" x:Name="WiFiPasswordBox" LostFocus="PasswordChanged" FontSize="24" PasswordChanged="WiFiPasswordBox_PasswordChanged" Margin="0,1"/>
+                    <CheckBox Grid.Row="3" Grid.Column="1" x:Name="ShowPassword" VerticalAlignment="Center" Content="Show Password" Click="CheckBox_Click" Height="31" ManipulationStarted="ShowPassword_ManipulationStarted"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left">
+                        <Run Text="Security Type"/>
+                    </TextBlock>
+                    <StackPanel Grid.Row="4" Grid.Column="1">
+                        <RadioButton x:Name="SecurityTypeOpenRadioButton" GroupName="SecurityType" Content="Open" Checked="SecurityTypeChanged" Height="30" Margin="0,4,0,2"/>
+                        <RadioButton x:Name="SecurityTypeWpaRadioButton" GroupName="SecurityType" Content="WPA/WPA2" Checked="SecurityTypeChanged" Height="30" Margin="0,2,0,2"/>
+                        <RadioButton x:Name="SecurityTypeWepRadioButton" GroupName="SecurityType" Content="WEP" Checked="SecurityTypeChanged" Height="30" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <CheckBox Grid.Row="5" Grid.Column="1" x:Name="EnableProxyCheckBox" Content="Enable Proxy Configuration" Click="EnableProxyCheckBox_Click"/>
+                    <TextBlock Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left">
+                        <Run Text="Proxy Hostname"/>
+                    </TextBlock>
+                    <TextBox Grid.Row="6" Grid.Column="1" x:Name="ProxyHostname" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="24" IsEnabled="False"/>
+                    <TextBlock Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left">
+                        <Run Text="Proxy Port"/>
+                    </TextBlock>
+                    <TextBox Grid.Row="7" Grid.Column="1" x:Name="ProxyPort" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="24" IsEnabled="False"/>
+                    <TextBlock Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left">
+                        <Run Text="Proxy Username"/>
+                    </TextBlock>
+                    <TextBox Grid.Row="8" Grid.Column="1" x:Name="ProxyUsername" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="24" IsEnabled="False"/>
+                    <TextBlock Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left">
+                        <Run Text="Proxy Password"/>
+                    </TextBlock>
+                    <TextBox Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" x:Name="ProxyPassword" Height="40" FontSize="24" Visibility="Collapsed" IsEnabled="False"/>
+                    <PasswordBox Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" x:Name="ProxyPasswordBox" Height="40"  FontSize="24" IsEnabled="False"/>
+                    <CheckBox Grid.Row="10" Grid.Column="1" x:Name="ShowProxyPassword" Content="Show Proxy Password" Margin="20,5" Click="ProxyCheckBox_Click" IsEnabled="False" Checked="ShowProxyPassword_Checked"/>
+                    <Button Grid.Row="11" Grid.ColumnSpan="2" IsEnabled="False" x:Name="ConfigurWiFiButton" Click="ConfigurWiFiButtonClick" 
+                                        Height="40" Content="CONFIGURE WI-FI" VerticalAlignment="Top"/>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="INFO">
+                <StackPanel>
+                    <CheckBox>Mucic</CheckBox>
+                    <CheckBox>Foot Ball</CheckBox>
+
+
+                    <CheckBox>classics</CheckBox>
+
+                    <CheckBox>Painting</CheckBox>
+                    <CheckBox>history</CheckBox>
+                </StackPanel>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>
