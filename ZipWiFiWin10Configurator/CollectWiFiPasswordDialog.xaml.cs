@@ -19,7 +19,9 @@ namespace ZipWiFiWin10Configurator
 {
     public sealed partial class CollectWiFiPasswordDialog : ContentDialog
     {
-        public string Password { get; set; }
+        public string Password {
+            get { return this.passwordTextBox.Text; }
+            set { this.passwordTextBox.Text = value;  } }
         public CollectWiFiPasswordDialog()
         {
             this.InitializeComponent();
@@ -27,7 +29,6 @@ namespace ZipWiFiWin10Configurator
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            Password = null;
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

@@ -7,8 +7,8 @@
     <ProjectGuid>{723E1DB2-DEFB-46A9-9539-257DFC350367}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UniversalWiFiApp</RootNamespace>
-    <AssemblyName>UniversalWiFiApp</AssemblyName>
+    <RootNamespace>ZipWiFiWin10Configurator</RootNamespace>
+    <AssemblyName>Zip WiFi Configurator</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
@@ -98,11 +98,21 @@
     <Compile Include="CollectWiFiPasswordDialog.xaml.cs">
       <DependentUpon>CollectWiFiPasswordDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataReceiver.cs" />
+    <Compile Include="ItemsChangeObservableCollection.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SocketClient.cs" />
+    <Compile Include="TcpConnTimer.cs" />
+    <Compile Include="ZipCommand.cs" />
+    <Compile Include="ZipConfigureWiFiCommand.cs" />
+    <Compile Include="ZipConfigurWiFiResponse.cs" />
+    <Compile Include="ZipMessageBus.cs" />
     <Compile Include="ZipNetworkConnection.cs" />
+    <Compile Include="ZipResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

@@ -1,35 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Windows.Storage;
 using Windows.Devices.WiFi;
 using Windows.Networking.Connectivity;
 using Windows.Security.Credentials;
 
 namespace ZipWiFiWin10Configurator
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         private WiFiAdapter mFirstAdapter;
         private DispatcherTimer dispatcherTimer;
+        private TcpConnTimer m_timerTcpConn = new TcpConnTimer(500);
         private int secondsSinceLastConnectionOk = 1000;
         private DateTime lastConnectionOkDateTime = new DateTime(2000, 1, 1);
-        ObservableCollection<ZipNetworkConnection> availableZipConnections = new ObservableCollection<ZipNetworkConnection>();
+        //ObservableCollection<ZipNetworkConnection> availableZipConnections = new ObservableCollection<ZipNetworkConnection>();
+        ItemsChangeObservableCollection<ZipNetworkConnection> availableZipConnections =
+            new ItemsChangeObservableCollection<ZipNetworkConnection>();
         ZipNetworkConnection ConnectedZipUnit;
         int ConnectedZipUnitIndex;
         public MainPage()
@@ -228,11 +219,73 @@ namespace ZipWiFiWin10Configurator
 
         private void ConfigurWiFiButtonClick(object sender, RoutedEventArgs e)
         {
+            int securityType = 0;
+            if (SecurityTypeOpenRadioButton.IsChecked ?? false)
+            {
+                securityType = 0;
+            }
+            else if (SecurityTypeWpaRadioButton.IsChecked ?? false)
+            {
+                securityType = 1;
+            }
+            else if (SecurityTypeWepRadioButton.IsChecked ?? false)
+            {
+                securityType = 2;
+            }
+            string tempDomain = HiddenDomain.Text.Trim();
+            if (WiFiList.SelectedValue != null)
+            {
+                var selectedItem = (ListViewItem)(WiFiList.SelectedValue);
+                tempDomain = selectedItem.Content as string;
+            }
 
+            string proxyHost = null;
+            string proxyPort = null;
+            string proxyUsername = null;
+            string proxyPassword = null;
+
+            if (EnableProxyCheckBox.IsChecked.Value)
+            {
+                proxyHost = this.ProxyHostname.Text;
+                proxyPort = this.ProxyPort.Text;
+                proxyUsername = this.ProxyUsername.Text;
+                if (ShowProxyPassword.IsChecked.Value)
+                {
+                    proxyPassword = this.ProxyPassword.Text;
+                }
+                else
+                {
+                    proxyPassword = this.ProxyPasswordBox.Password;
+                }
+            }
+            ZipConfigureWiFiCommand command = new ZipConfigureWiFiCommand
+            {
+                Domain = tempDomain,
+                Password = WiFiPassword.Text,
+                SecurityType = securityType,
+                ProxyHost = proxyHost,
+                ProxyPort = proxyPort,
+                ProxyUsername = proxyUsername,
+                ProxyPassword = proxyPassword
+            };
+            ZipMessageBus.SINGLETON.QueueCommand(command);
+            ConfigurWiFiButton.IsEnabled = false;
+
+            SaveNewConfigValues(command);
         }
 
+        private void SaveNewConfigValues(ZipConfigureWiFiCommand command)
+        {
+            Settings setttings = new Settings();
+            setttings.ConfigDomain = command.Domain;
+            setttings.ConfigPassword = command.Password;
+            setttings.ProxyHost = command.ProxyHost;
+            setttings.ProxyPort = command.ProxyPort;
+            setttings.ProxyUsername = command.ProxyUsername;
+            setttings.ProxyPassword = command.ProxyPassword;
+    }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+    private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             CollectZipWiFiNetworks();
             dispatcherTimer = new DispatcherTimer();
@@ -265,8 +318,6 @@ namespace ZipWiFiWin10Configurator
                             network.ConnectionStatus = "";
                             network.Color = "";
                             network.Color = "green";
-                            availableZipConnections.RemoveAt(i);
-                            availableZipConnections.Insert(i, new ZipNetworkConnection { WiFiNetwork = network.WiFiNetwork, Color = network.Color, ConnectionStatus = network.ConnectionStatus });
                         }
                     }
                 }
@@ -290,8 +341,6 @@ namespace ZipWiFiWin10Configurator
                             network.ConnectionStatus = "";
                             network.Color = "";
                             network.Color = "green";
-                            availableZipConnections.RemoveAt(i);
-                            availableZipConnections.Insert(i, new ZipNetworkConnection { WiFiNetwork = network.WiFiNetwork, Color = network.Color, ConnectionStatus = network.ConnectionStatus });
                         }
                     }
                 }
@@ -304,8 +353,6 @@ namespace ZipWiFiWin10Configurator
             {
                 network.ConnectionStatus = "CONNECTED";
                 network.Color = "green";
-                availableZipConnections.RemoveAt(index);
-                availableZipConnections.Insert(index, new ZipNetworkConnection { WiFiNetwork = network.WiFiNetwork, Color = network.Color, ConnectionStatus = network.ConnectionStatus });
             }
             else if (secondsSinceLastConnectionOk < 5)
             {
@@ -313,8 +360,6 @@ namespace ZipWiFiWin10Configurator
                 {
                     network.Color = "green";
                     network.ConnectionStatus = "CONNECTED";
-                    availableZipConnections.RemoveAt(index);
-                    availableZipConnections.Insert(index, new ZipNetworkConnection { WiFiNetwork = network.WiFiNetwork, Color = network.Color, ConnectionStatus = network.ConnectionStatus });
                 }
             }
             else
@@ -323,8 +368,6 @@ namespace ZipWiFiWin10Configurator
                 {
                     network.Color = "red";
                     network.ConnectionStatus = "DISCONNECTED";
-                    availableZipConnections.RemoveAt(index);
-                    availableZipConnections.Insert(index, new ZipNetworkConnection { WiFiNetwork = network.WiFiNetwork, Color = network.Color, ConnectionStatus = network.ConnectionStatus });
                 }
             }
         }
@@ -347,7 +390,7 @@ namespace ZipWiFiWin10Configurator
             this.WiFiNetworksListView.Items.Clear();
             this.WiFiList.Items.Clear();
 
-            String wiFiNamePrefix = "Big";// (String)ApplicationData.Current.LocalSettings.Values["wifi_name_prefix"];
+            String wiFiNamePrefix = "Big";// new Settings().WiFiDomainPrefix;
             foreach (ZipNetworkConnection item in items)
             {
                 if ((item.Ssid.ToLower().StartsWith(wiFiNamePrefix.ToLower())))
@@ -366,6 +409,7 @@ namespace ZipWiFiWin10Configurator
         private async void ConnectToZipUnit(object sender, DoubleTappedRoutedEventArgs e)
         {
             CollectWiFiPasswordDialog dialog = new CollectWiFiPasswordDialog();
+            dialog.Password = new Settings().WiFiDomainPassword;
             ContentDialogResult result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Secondary)
             {
@@ -387,9 +431,9 @@ namespace ZipWiFiWin10Configurator
                     connectionResult = await mFirstAdapter.ConnectAsync(selectedNetwork, WiFiReconnectionKind.Manual, credential);
                 }
 
+                new Settings().WiFiDomainPassword = dialog.Password;
                 if (connectionResult.ConnectionStatus == WiFiConnectionStatus.Success)
                 {
-                    int i = 99;
                 }
                 else
                 {
