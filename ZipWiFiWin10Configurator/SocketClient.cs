@@ -40,30 +40,35 @@ namespace ZipWiFiWin10Configurator
             _clientDone.WaitOne(TIMEOUT_MILLISECONDS);
             return result;
         }
-        public string Send(byte[] payload)
+        public Boolean Send(byte[] payload)
         {
-            string response = "Operation Timeout";
-
             if (_socket != null)
             {
                 SocketAsyncEventArgs socketEventArg = new SocketAsyncEventArgs();
-                socketEventArg.RemoteEndPoint = _socket.RemoteEndPoint;
-                socketEventArg.UserToken = null;
-                socketEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(delegate (object s, SocketAsyncEventArgs e)
+                try
                 {
-                    response = e.SocketError.ToString();
-                    _clientDone.Set();
-                });
-                socketEventArg.SetBuffer(payload, 0, payload.Length);
-                _clientDone.Reset();
-                _socket.SendAsync(socketEventArg);
-                _clientDone.WaitOne(TIMEOUT_MILLISECONDS);
+                    socketEventArg.RemoteEndPoint = _socket.RemoteEndPoint;
+                    socketEventArg.UserToken = null;
+                    socketEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(delegate (object s, SocketAsyncEventArgs e)
+                    {
+                        String response = e.SocketError.ToString();
+                        _clientDone.Set();
+                    });
+                    socketEventArg.SetBuffer(payload, 0, payload.Length);
+                    _clientDone.Reset();
+                    _socket.SendAsync(socketEventArg);
+                    _clientDone.WaitOne(TIMEOUT_MILLISECONDS);
+                    return true;
+                } catch(SocketException e)
+                {
+                    ToastHelper.PopToast("Connection failed", e.Message , "Replace", "Toast1");
+                }
             }
             else
             {
-                response = "Socket is not initialized";
+                ToastHelper.PopToast("Connection failed", "Socket is not initialized", "Replace", "Toast1");
             }
-            return response;
+            return false;
         }
         public byte[] Receive()
         {

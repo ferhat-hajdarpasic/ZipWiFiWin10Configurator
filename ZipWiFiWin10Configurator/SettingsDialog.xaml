@@ -1,0 +1,50 @@
+﻿<ContentDialog
+    x:Class="ZipWiFiWin10Configurator.SettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZipWiFiWin10Configurator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Settings"
+    PrimaryButtonText="Cancel"
+    SecondaryButtonText="OK"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick" Width="430" Height="435">
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Hostname" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+        <TextBox Name="Hostname" Grid.Column="2" Grid.Row="0"/>
+        <TextBlock Text="Port" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <TextBox Name="Port"  Grid.Column="2" Grid.Row="1"/>
+        <TextBlock Text="WiFi domain prefix" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <TextBox Name="WiFiDomainPRefix" Grid.Column="2" Grid.Row="2"/>
+        <TextBlock Text="Config password" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2"/>
+        <TextBox Name="ConfigPassword" Grid.Column="2" Grid.Row="3"/>
+        <TextBlock Text="WiFi domain password" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"/>
+        <TextBox Name="WiFiDomainPassword" Grid.Column="2" Grid.Row="4"/>
+        <TextBlock Text="Proxy hostname" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2"/>
+        <TextBox Name="ProxyHostname" Grid.Column="2" Grid.Row="5"/>
+        <TextBlock Text="Proxy port" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2"/>
+        <TextBox Name="ProxyPort" Grid.Column="2" Grid.Row="6"/>
+        <TextBlock Text="Proxy username" Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2"/>
+        <TextBox Name="ProxyUsername" Grid.Column="2" Grid.Row="7"/>
+        <TextBlock Text="Proxy password" Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="2"/>
+        <TextBox Name="ProxyPassword" Grid.Column="2" Grid.Row="8"/>
+    </Grid>
+</ContentDialog>

@@ -50,15 +50,22 @@ namespace ZipWiFiWin10Configurator
 
             try
             {
-                new Settings().Hostname = "192.168.0.4";
-                new Settings().Port = 9080;
-
                 String status = socketClient.Connect(new Settings().Hostname, new Settings().Port);
-                byte[] payload = command.GetBytes();
-                socketClient.Send(payload);
-                byte[] bytes = socketClient.Receive();
-                ZipResponse response = (new DataReceiver()).Handle(bytes);
-                OnCommandResponseReceived(response);
+                if (status == "Success")
+                {
+                    byte[] payload = command.GetBytes();
+                    Boolean success = socketClient.Send(payload);
+                    if (success)
+                    {
+                        byte[] bytes = socketClient.Receive();
+                        ZipResponse response = (new DataReceiver()).Handle(bytes);
+                        OnCommandResponseReceived(response);
+                    }
+                } else
+                {
+                    ToastHelper.PopToast("Failed to connect", new Settings().Hostname + " on port " + new Settings().Port, "Replace", "Toast1");
+                    OnCommandResponseReceived(new ZipConfigurWiFiResponse { IsValid = false});
+                }
             } finally
             {
                 socketClient.Close();

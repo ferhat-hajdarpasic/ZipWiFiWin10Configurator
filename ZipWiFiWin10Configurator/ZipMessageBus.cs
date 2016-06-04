@@ -16,7 +16,6 @@ namespace ZipWiFiWin10Configurator
     public class ZipMessageBus
     {
         private static ConcurrentQueue<ZipCommand> CommandQueue = new ConcurrentQueue<ZipCommand>();
-        private Timer m_timer;
 
         public static ZipMessageBus SINGLETON = new ZipMessageBus();
         private ZipMessageBus()

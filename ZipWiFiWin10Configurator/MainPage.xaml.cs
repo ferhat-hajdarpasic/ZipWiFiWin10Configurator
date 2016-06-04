@@ -8,6 +8,8 @@ using Windows.UI.Xaml.Input;
 using Windows.Devices.WiFi;
 using Windows.Networking.Connectivity;
 using Windows.Security.Credentials;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace ZipWiFiWin10Configurator
 {
@@ -283,15 +285,39 @@ namespace ZipWiFiWin10Configurator
             setttings.ProxyPort = command.ProxyPort;
             setttings.ProxyUsername = command.ProxyUsername;
             setttings.ProxyPassword = command.ProxyPassword;
-    }
+        }
 
-    private void Page_Loaded(object sender, RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            ZipMessageBus.SINGLETON.ResponseReceived += new ZipResponseReceivedHandler(OnZipResponseReceived);
             CollectZipWiFiNetworks();
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += dispatcherTimer_Tick;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
+        }
+
+        private async void OnZipResponseReceived(object sender, ZipResponseReceivedEventArgs e)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                var configResponse = e.Response as ZipConfigurWiFiResponse;
+                if (configResponse != null)
+                {
+                    CheckEnableConfigureButton();
+                    if(configResponse.IsValid)
+                    {
+                        ToastHelper.PopToast("", "Successfully Configured", "Replace", "Toast1");
+                    } else
+                    {
+                        //ToastHelper.PopToast("", "Configuration Failed", "Replace", "Toast1");
+                    }
+                }
+            }); ;
+        }
+
+        private void HandleResponses(object sender, ZipResponse response)
+        {
         }
 
         private async void dispatcherTimer_Tick(object sender, object e)
@@ -387,10 +413,10 @@ namespace ZipWiFiWin10Configurator
             {
                 items.Add(new ZipNetworkConnection { WiFiNetwork = availableNetwork });
             }
-            this.WiFiNetworksListView.Items.Clear();
+            this.availableZipConnections.Clear();
             this.WiFiList.Items.Clear();
 
-            String wiFiNamePrefix = "Big";// new Settings().WiFiDomainPrefix;
+            String wiFiNamePrefix = new Settings().WiFiDomainPrefix;
             foreach (ZipNetworkConnection item in items)
             {
                 if ((item.Ssid.ToLower().StartsWith(wiFiNamePrefix.ToLower())))
@@ -408,6 +434,13 @@ namespace ZipWiFiWin10Configurator
 
         private async void ConnectToZipUnit(object sender, DoubleTappedRoutedEventArgs e)
         {
+            if(ConnectedZipUnit != null)
+            {
+                this.mFirstAdapter.Disconnect();
+                ToastHelper.PopToast("Disconnected from:", ConnectedZipUnit.Ssid, "Replace", "Toast1");
+                ConnectedZipUnit = null;
+            }
+
             CollectWiFiPasswordDialog dialog = new CollectWiFiPasswordDialog();
             dialog.Password = new Settings().WiFiDomainPassword;
             ContentDialogResult result = await dialog.ShowAsync();
@@ -434,11 +467,25 @@ namespace ZipWiFiWin10Configurator
                 new Settings().WiFiDomainPassword = dialog.Password;
                 if (connectionResult.ConnectionStatus == WiFiConnectionStatus.Success)
                 {
+                    ToastHelper.PopToast("Connected to", ConnectedZipUnit.Ssid, "Replace", "Toast1");
                 }
                 else
                 {
+                    ToastHelper.PopToast("Connection failed", ConnectedZipUnit.Ssid, "Replace", "Toast1");
                 }
             }
+        }
+
+        private async void MenuFlyoutItemSettings_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsDialog dialog = new SettingsDialog();
+            ContentDialogResult result = await dialog.ShowAsync();
+        }
+
+        private async void MenuFlyoutItemAbout_Click(object sender, RoutedEventArgs e)
+        {
+            AboutDialog dialog = new AboutDialog();
+            ContentDialogResult result = await dialog.ShowAsync();
         }
     }
 }
