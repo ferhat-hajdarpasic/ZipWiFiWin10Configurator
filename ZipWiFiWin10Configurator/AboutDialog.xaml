@@ -23,6 +23,6 @@
             <Image x:Name="image" Height="60" Source="Assets/zip_large.gif" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="Zip WiFi Configurator" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36"/>
         </StackPanel>
-        <TextBlock Margin="10" Grid.Column="0" Grid.Row="1" Text="Verion 1.0 3/05/2016"></TextBlock>
+        <TextBlock x:Name="VersionTextBlock"  Margin="10" Grid.Column="0" Grid.Row="1" Text="Version ..."></TextBlock>
     </Grid>
 </ContentDialog>
