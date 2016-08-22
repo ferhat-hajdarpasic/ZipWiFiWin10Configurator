@@ -26,10 +26,10 @@
             </Grid.RowDefinitions>
             <Image Grid.Column="0" Grid.Row="0" x:Name="image" Height="60" Source="Assets/zip_large.gif" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <TextBlock Grid.Column="1" Grid.Row="0" x:Name="textBlock" TextWrapping="Wrap" Text="Zip WiFi Configurator" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="36"/>
-            <Button Grid.Column="2" Grid.Row="0" Name="flyoutMenuButton" Content="&#xE712;" Style="{StaticResource EllipsisButton}"
-       FontFamily="Segoe UI Symbol" FontSize="18.667" 
-       Padding="8,8,0,0" Margin="0,0,0,10"
-       >
+            <Button x:Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
+                    Width="50" Height="50" Background="Transparent" />
+            <Button Grid.Column="2" Grid.Row="0" Name="flyoutMenuButton" Style="{StaticResource EllipsisButton}" 
+       FontFamily="Segoe MDL2 Assets" FontSize="48" Width="50" Height="50" Background="Transparent" Content="&#xE700;">
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Settings" Click="MenuFlyoutItemSettings_Click"/>
@@ -52,7 +52,7 @@
                     <!-- If not specified, then Grid.Column="0" Grid.Row="0" are defaults-->
                     <ListView Grid.Column="0" Grid.Row="0" x:Name="WiFiNetworksListView" 
                                       HorizontalContentAlignment="Stretch" Height="Auto" VerticalContentAlignment="Stretch" 
-                                      VerticalAlignment="Stretch"  FontSize="24" DoubleTapped="ConnectToZipUnit">
+                                      VerticalAlignment="Stretch"  FontSize="20" DoubleTapped="ConnectToZipUnit">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -71,37 +71,37 @@
             <PivotItem Header="WIFI CONFIG">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="249"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="35*"/>
+                        <ColumnDefinition Width="65*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="30*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="30*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="10*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="WiFi Domains" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"/>
 
                     <ListView Grid.Row="0" Grid.Column="1" x:Name="WiFiList" 
-                                          HorizontalContentAlignment="Stretch" FontSize="24" 
+                                          HorizontalContentAlignment="Stretch" FontSize="20" 
                                           VerticalContentAlignment="Stretch" 
                                             VerticalAlignment="Stretch"
                                           SelectionChanged="DomainNameSelected" />
                     <TextBlock Text="Hidden Domain" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="HiddenDomain" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="24" GotFocus="HiddenDomain_GotFocus" TextChanged="HiddenDomain_TextChanged" Margin="0,1"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="HiddenDomain" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="20" GotFocus="HiddenDomain_GotFocus" TextChanged="HiddenDomain_TextChanged" Margin="0,1"/>
                     <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left">
                         <Run Text="Password"/>
                     </TextBlock>
-                    <TextBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Stretch" x:Name="WiFiPassword" LostFocus="PasswordChanged" FontSize="24" Visibility="Collapsed" TextChanged="WiFiPassword_TextChanged" Margin="0,1"/>
-                    <PasswordBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Stretch" x:Name="WiFiPasswordBox" LostFocus="PasswordChanged" FontSize="24" PasswordChanged="WiFiPasswordBox_PasswordChanged" Margin="0,1"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Stretch" x:Name="WiFiPassword" LostFocus="PasswordChanged" FontSize="20" Visibility="Collapsed" TextChanged="WiFiPassword_TextChanged" Margin="0,1"/>
+                    <PasswordBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Stretch" x:Name="WiFiPasswordBox" LostFocus="PasswordChanged" FontSize="20" PasswordChanged="WiFiPasswordBox_PasswordChanged" Margin="0,1"/>
                     <CheckBox Grid.Row="3" Grid.Column="1" x:Name="ShowPassword" VerticalAlignment="Center" Content="Show Password" Click="CheckBox_Click" Height="31" ManipulationStarted="ShowPassword_ManipulationStarted"/>
                     <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left">
                         <Run Text="Security Type"/>
@@ -115,20 +115,20 @@
                     <TextBlock Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left">
                         <Run Text="Proxy Hostname"/>
                     </TextBlock>
-                    <TextBox Grid.Row="6" Grid.Column="1" x:Name="ProxyHostname" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="24" IsEnabled="False"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" x:Name="ProxyHostname" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="20" IsEnabled="False"/>
                     <TextBlock Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left">
                         <Run Text="Proxy Port"/>
                     </TextBlock>
-                    <TextBox Grid.Row="7" Grid.Column="1" x:Name="ProxyPort" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="24" IsEnabled="False"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" x:Name="ProxyPort" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="20" IsEnabled="False"/>
                     <TextBlock Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left">
                         <Run Text="Proxy Username"/>
                     </TextBlock>
-                    <TextBox Grid.Row="8" Grid.Column="1" x:Name="ProxyUsername" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="24" IsEnabled="False"/>
+                    <TextBox Grid.Row="8" Grid.Column="1" x:Name="ProxyUsername" TextWrapping="Wrap" HorizontalContentAlignment="Stretch" FontSize="20" IsEnabled="False"/>
                     <TextBlock Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left">
                         <Run Text="Proxy Password"/>
                     </TextBlock>
-                    <TextBox Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" x:Name="ProxyPassword" Height="40" FontSize="24" Visibility="Collapsed" IsEnabled="False"/>
-                    <PasswordBox Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" x:Name="ProxyPasswordBox" Height="40"  FontSize="24" IsEnabled="False"/>
+                    <TextBox Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" x:Name="ProxyPassword" Height="40" FontSize="20" Visibility="Collapsed" IsEnabled="False"/>
+                    <PasswordBox Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" x:Name="ProxyPasswordBox" Height="40"  FontSize="20" IsEnabled="False"/>
                     <CheckBox Grid.Row="10" Grid.Column="1" x:Name="ShowProxyPassword" Content="Show Proxy Password" Margin="20,5" Click="ProxyCheckBox_Click" IsEnabled="False" Checked="ShowProxyPassword_Checked"/>
                     <Button Grid.Row="11" Grid.ColumnSpan="2" IsEnabled="False" x:Name="ConfigurWiFiButton" Click="ConfigurWiFiButtonClick" 
                                         Height="40" Content="CONFIGURE WI-FI" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>

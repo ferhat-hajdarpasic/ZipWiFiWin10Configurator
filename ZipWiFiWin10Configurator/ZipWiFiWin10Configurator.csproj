@@ -18,7 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>ZipWiFiWin10Configurator_StoreKey.pfx</PackageCertificateKeyFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Auto</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>300D4AEACEFADDB577A692AD66F3084FF04F4CD0</PackageCertificateThumbprint>
   </PropertyGroup>
@@ -146,6 +146,7 @@
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
     <Content Include="Assets\zip_large.gif" />
+    <Content Include="Assets\zip_large_50x50.png" />
     <Content Include="Assets\zip_logo_home.png" />
     <Content Include="Assets\zip_logo_icon.png" />
     <Content Include="Properties\Default.rd.xml" />
