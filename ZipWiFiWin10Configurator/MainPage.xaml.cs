@@ -18,7 +18,7 @@ namespace ZipWiFiWin10Configurator
         private WiFiAdapter mFirstAdapter;
         private DispatcherTimer dispatcherTimer;
         private TcpConnTimer m_timerTcpConn = new TcpConnTimer(500);
-        private int secondsSinceLastConnectionOk = 1000;
+        private long secondsSinceLastConnectionOk = 1000;
         private DateTime lastConnectionOkDateTime = new DateTime(2000, 1, 1);
         //ObservableCollection<ZipNetworkConnection> availableZipConnections = new ObservableCollection<ZipNetworkConnection>();
         ItemsChangeObservableCollection<ZipNetworkConnection> availableZipConnections =
@@ -139,12 +139,15 @@ namespace ZipWiFiWin10Configurator
                 this.WiFiPasswordBox.Visibility = Visibility.Collapsed;
                 this.WiFiPassword.Visibility = Visibility.Visible;
                 this.WiFiPassword.Text = this.WiFiPasswordBox.Password;
+                this.WiFiPassword.Focus(FocusState.Programmatic);
+                this.WiFiPassword.SelectionStart = this.WiFiPassword.Text.Length;
             }
             else
             {
                 this.WiFiPasswordBox.Visibility = Visibility.Visible;
                 this.WiFiPassword.Visibility = Visibility.Collapsed;
                 this.WiFiPasswordBox.Password = this.WiFiPassword.Text;
+                this.WiFiPasswordBox.Focus(FocusState.Programmatic);
             }
         }
 
@@ -320,36 +323,28 @@ namespace ZipWiFiWin10Configurator
         {
         }
 
-        private async void dispatcherTimer_Tick(object sender, object e)
-        {
+        private async void dispatcherTimer_Tick(object sender, object e) {
             ConnectionProfile connectionProfile = await mFirstAdapter.NetworkAdapter.GetConnectedProfileAsync();
-            if(connectionProfile != null)
-            {
+            if(connectionProfile != null) {
                 String profileName = connectionProfile.ProfileName;
-                lastConnectionOkDateTime = DateTime.Now;
 
-                for(int i = 0; i < availableZipConnections.Count; i++)
-                {
+                for(int i = 0; i < availableZipConnections.Count; i++) {
                     ZipNetworkConnection network = availableZipConnections.ElementAt(i);
-                    if (network.Ssid == profileName)
-                    {
+                    if (network.Ssid == profileName) {
+                        lastConnectionOkDateTime = DateTime.Now;
                         this.ConnectedZipUnit = network;
                         this.ConnectedZipUnitIndex = i;
                         this.WiFiNetworksListView.SelectedIndex = i;
                         updateSelectedNetworkStatus(network, i);
-                    } else
-                    {
-                        if (("" != network.ConnectionStatus) || ("" != network.ConnectionStatus))
-                        {
-                            network.ConnectionStatus = "";
-                            network.Color = "";
-                            network.Color = "green";
-                        }
+                    } else {
+                        network.ConnectionStatus = "";
+                        network.Color = "";
                     }
                 }
             }
 
-            secondsSinceLastConnectionOk = (int)(DateTime.Now - lastConnectionOkDateTime).Seconds;
+            TimeSpan span = DateTime.Now.Subtract(lastConnectionOkDateTime);
+            secondsSinceLastConnectionOk = (span).Ticks/(10*1000*1000);
 
             if (connectionProfile == null)
             {
@@ -446,14 +441,11 @@ namespace ZipWiFiWin10Configurator
             ContentDialogResult result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Secondary)
             {
-                this.ConnectedZipUnit = (ZipNetworkConnection)this.WiFiNetworksListView.SelectedItem;
-                this.ConnectedZipUnitIndex = this.WiFiNetworksListView.SelectedIndex;
-
-                WiFiAvailableNetwork selectedNetwork = this.ConnectedZipUnit.WiFiNetwork;
+                WiFiAvailableNetwork networkToConnectTo = ((ZipNetworkConnection)this.WiFiNetworksListView.SelectedItem).WiFiNetwork;
                 WiFiConnectionResult connectionResult;
-                if (selectedNetwork.SecuritySettings.NetworkAuthenticationType == Windows.Networking.Connectivity.NetworkAuthenticationType.Open80211)
+                if (networkToConnectTo.SecuritySettings.NetworkAuthenticationType == Windows.Networking.Connectivity.NetworkAuthenticationType.Open80211)
                 {
-                    connectionResult = await mFirstAdapter.ConnectAsync(selectedNetwork, WiFiReconnectionKind.Manual);
+                    connectionResult = await mFirstAdapter.ConnectAsync(networkToConnectTo, WiFiReconnectionKind.Manual);
                 }
                 else
                 {
@@ -461,17 +453,19 @@ namespace ZipWiFiWin10Configurator
                     var credential = new PasswordCredential();
                     credential.Password = dialog.Password;
 
-                    connectionResult = await mFirstAdapter.ConnectAsync(selectedNetwork, WiFiReconnectionKind.Manual, credential);
+                    connectionResult = await mFirstAdapter.ConnectAsync(networkToConnectTo, WiFiReconnectionKind.Manual, credential);
                 }
 
                 new Settings().WiFiDomainPassword = dialog.Password;
                 if (connectionResult.ConnectionStatus == WiFiConnectionStatus.Success)
                 {
+                    this.ConnectedZipUnit = (ZipNetworkConnection)this.WiFiNetworksListView.SelectedItem;
+                    this.ConnectedZipUnitIndex = this.WiFiNetworksListView.SelectedIndex;
                     ToastHelper.PopToast("Connected to", ConnectedZipUnit.Ssid, "Replace", "Toast1");
                 }
                 else
                 {
-                    ToastHelper.PopToast("Connection failed", ConnectedZipUnit.Ssid, "Replace", "Toast1");
+                    ToastHelper.PopToast("Connection failed: " + connectionResult.ConnectionStatus, networkToConnectTo.Ssid, "Replace", "Toast1");
                 }
             }
         }

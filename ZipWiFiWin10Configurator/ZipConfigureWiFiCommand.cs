@@ -20,10 +20,10 @@ namespace ZipWiFiWin10Configurator
             string tempPayload = SecurityType + "\0" + Domain.Trim() + "\0" + Password.ToString().Trim();
             if(!String.IsNullOrWhiteSpace(ProxyHost) && !String.IsNullOrWhiteSpace(ProxyPort))
             {
-                tempPayload = "\0" + tempPayload + ProxyHost.Trim() + "\0" + ProxyPort.Trim();
+                tempPayload = tempPayload + "\0" + ProxyHost.Trim() + "\0" + ProxyPort.Trim();
                 if (!String.IsNullOrWhiteSpace(ProxyUsername) && !String.IsNullOrWhiteSpace(ProxyPassword))
                 {
-                    tempPayload = "\0" + tempPayload + ProxyUsername.Trim() + "\0" + ProxyPassword.Trim();
+                    tempPayload = tempPayload + "\0" + ProxyUsername.Trim() + "\0" + ProxyPassword.Trim();
                 }
             }
             byte[] payload = Encoding.ASCII.GetBytes(tempPayload);

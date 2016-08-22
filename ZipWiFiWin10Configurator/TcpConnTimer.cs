@@ -2,6 +2,9 @@
 using System.Threading;
 using Windows.UI.Xaml;
 using System.Collections.Concurrent;
+using Windows.Networking.Sockets;
+using Windows.Networking;
+using System.IO;
 
 namespace ZipWiFiWin10Configurator
 {
@@ -44,10 +47,36 @@ namespace ZipWiFiWin10Configurator
                 return ZipMessageBus.DequeueNextCommand();
         }
 
-        protected virtual void SendCommand(ZipCommand command)
+        protected async virtual void SendCommand(ZipCommand command) {
+            StreamSocket socket = new StreamSocket();
+            HostName serverHost = new HostName(new Settings().Hostname);
+
+            try
+            {
+                await socket.ConnectAsync(serverHost, "" + new Settings().Port);
+                Stream streamOut = socket.OutputStream.AsStreamForWrite();
+                byte[] bytes = command.GetBytes();
+                await streamOut.WriteAsync(bytes, 0, bytes.Length);
+                await streamOut.FlushAsync();
+
+                Stream streamIn = socket.InputStream.AsStreamForRead();
+
+                byte[] responseBuffer = new byte[10];
+                await streamIn.ReadAsync(responseBuffer, 0, responseBuffer.Length);
+                ZipResponse response = (new DataReceiver()).Handle(responseBuffer);
+                OnCommandResponseReceived(response);
+            } catch(Exception e) {
+                ToastHelper.PopToast("Failed to configure", new Settings().Hostname + " on port " + new Settings().Port, "Replace", "Toast1");
+                OnCommandResponseReceived(new ZipConfigurWiFiResponse { IsValid = false });
+            }
+            finally {
+                socket.Dispose();
+            }
+        }
+
+        protected virtual void SendCommandUsingSocketClient(ZipCommand command)
         {
             SocketClient socketClient = new SocketClient();
-
             try
             {
                 String status = socketClient.Connect(new Settings().Hostname, new Settings().Port);
@@ -61,12 +90,14 @@ namespace ZipWiFiWin10Configurator
                         ZipResponse response = (new DataReceiver()).Handle(bytes);
                         OnCommandResponseReceived(response);
                     }
-                } else
+                }
+                else
                 {
                     ToastHelper.PopToast("Failed to connect", new Settings().Hostname + " on port " + new Settings().Port, "Replace", "Toast1");
-                    OnCommandResponseReceived(new ZipConfigurWiFiResponse { IsValid = false});
+                    OnCommandResponseReceived(new ZipConfigurWiFiResponse { IsValid = false });
                 }
-            } finally
+            }
+            finally
             {
                 socketClient.Close();
             }

@@ -46,10 +46,10 @@ namespace ZipWiFiWin10Configurator
             settings.WiFiDomainPrefix = this.WiFiDomainPRefix.Text;
             settings.WiFiDomainPassword = this.WiFiDomainPassword.Text;
 
-            settings.Hostname = this.ProxyHostname.Text;
-            settings.Hostname = this.ProxyPort.Text;
-            settings.Hostname = this.ProxyUsername.Text;
-            settings.Hostname = this.ProxyPassword.Text;
+            settings.ProxyHost = this.ProxyHostname.Text;
+            settings.ProxyPort = this.ProxyPort.Text;
+            settings.ProxyUsername = this.ProxyUsername.Text;
+            settings.ProxyPassword = this.ProxyPassword.Text;
         }
     }
 }
