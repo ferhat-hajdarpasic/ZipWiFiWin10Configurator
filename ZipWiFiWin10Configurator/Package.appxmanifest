@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="48569WhiteSpider.ZipWiFiConfigurator" Publisher="CN=057A034A-9706-48E3-9094-C81B85ADDAFD" Version="1.1.17.0" />
+  <Identity Name="48569WhiteSpider.ZipWiFiConfigurator" Publisher="CN=057A034A-9706-48E3-9094-C81B85ADDAFD" Version="1.1.19.0" />
   <mp:PhoneIdentity PhoneProductId="b0214575-3603-4ef6-a051-73b82acc9dac" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>ZipWiFiConfigurator</DisplayName>

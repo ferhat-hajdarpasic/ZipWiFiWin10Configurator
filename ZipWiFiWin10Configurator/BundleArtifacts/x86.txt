@@ -1,0 +1,2 @@
+MainPackage=C:\projects\ZipWiFiWin10Configurator\ZipWiFiWin10Configurator\bin\x86\Release\ZipWiFiWin10Configurator_1.1.19.0_x86.appx
+SymbolPackage=C:\projects\ZipWiFiWin10Configurator\ZipWiFiWin10Configurator\AppPackages\ZipWiFiWin10Configurator_1.1.19.0_Test\ZipWiFiWin10Configurator_1.1.19.0_x86.appxsym

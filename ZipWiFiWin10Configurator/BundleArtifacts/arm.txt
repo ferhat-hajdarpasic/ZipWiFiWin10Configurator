@@ -1,0 +1,6 @@
+MainPackage=C:\projects\ZipWiFiWin10Configurator\ZipWiFiWin10Configurator\bin\ARM\Release\ZipWiFiWin10Configurator_1.1.19.0_ARM.appx
+SymbolPackage=C:\projects\ZipWiFiWin10Configurator\ZipWiFiWin10Configurator\AppPackages\ZipWiFiWin10Configurator_1.1.19.0_Test\ZipWiFiWin10Configurator_1.1.19.0_ARM.appxsym
+ResourcePack=C:\projects\ZipWiFiWin10Configurator\ZipWiFiWin10Configurator\bin\ARM\Release\ZipWiFiWin10Configurator_1.1.19.0_scale-100.appx
+ResourcePack=C:\projects\ZipWiFiWin10Configurator\ZipWiFiWin10Configurator\bin\ARM\Release\ZipWiFiWin10Configurator_1.1.19.0_scale-125.appx
+ResourcePack=C:\projects\ZipWiFiWin10Configurator\ZipWiFiWin10Configurator\bin\ARM\Release\ZipWiFiWin10Configurator_1.1.19.0_scale-150.appx
+ResourcePack=C:\projects\ZipWiFiWin10Configurator\ZipWiFiWin10Configurator\bin\ARM\Release\ZipWiFiWin10Configurator_1.1.19.0_scale-400.appx

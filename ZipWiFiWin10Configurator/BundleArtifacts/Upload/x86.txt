@@ -1,0 +1,1 @@
+MainPackage=C:\projects\ZipWiFiWin10Configurator\ZipWiFiWin10Configurator\bin\x86\Release\Upload\ZipWiFiWin10Configurator_1.1.15.0_x86.appx

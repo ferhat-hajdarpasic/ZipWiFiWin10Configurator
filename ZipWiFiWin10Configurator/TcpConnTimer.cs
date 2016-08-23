@@ -66,7 +66,7 @@ namespace ZipWiFiWin10Configurator
                 ZipResponse response = (new DataReceiver()).Handle(responseBuffer);
                 OnCommandResponseReceived(response);
             } catch(Exception e) {
-                ToastHelper.PopToast("Failed to configure", new Settings().Hostname + " on port " + new Settings().Port, "Replace", "Toast1");
+                ToastHelper.PopToast("Failed to configure", e.Message, "Replace", "Toast1");
                 OnCommandResponseReceived(new ZipConfigurWiFiResponse { IsValid = false });
             }
             finally {
